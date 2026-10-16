@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="sq">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="robots" content="noindex, nofollow">
+  <title>DSS Shop | Admin</title>
+
+  <style>
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 12px;
+      font-family: Arial, sans-serif;
+      background: #f3f5f9;
+      color: #172033;
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 20px auto;
+    }
+
+    .card {
+      background: white;
+      padding: 18px;
+      margin-bottom: 16px;
+      border-radius: 12px;
+      box-shadow: 0 3px 15px #0000000d;
+    }
+
+    input, textarea, select {
+      display: block;
+      width: 100%;
+      padding: 12px;
+      margin: 8px 0 16px;
+      border: 1px solid #d0d5dd;
+      border-radius: 8px;
+      font-size: 16px;
+      background: white;
+    }
+
+    input[type="checkbox"] {
+      display: inline-block;
+      width: auto;
+      margin-right: 8px;
+    }
+
+    button {
+      padding: 12px 16px;
+      margin: 4px 4px 4px 0;
+      border: 0;
+      border-radius: 8px;
+      background: #155eef;
+      color: white;
+      font-size: 15px;
+      cursor: pointer;
+    }
+
+    button:disabled { opacity: .6; }
+    .secondary { background: #475467; }
+    .danger { background: #b42318; }
+    .message { margin-top: 12px; overflow-wrap: anywhere; }
+    [hidden] { display: none !important; }
+    img { max-width: 100%; }
+
+    .banner-item, .category-item {
+      border: 1px solid #d0d5dd;
+      border-radius: 10px;
+      padding: 12px;
+      margin-top: 12px;
+      overflow-wrap: anywhere;
+    }
+
+    .banner-item img {
+      display: block;
+      width: 100%;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin: 10px 0;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 8px; }
+      .card { padding: 14px; }
+    }
+  </style>
+</head>
+
+<body>
+<main class="container">
+
+  <header class="card">
+    <h1>DSS SHOP</h1>
+    <p>Paneli i administrimit</p>
+    <button type="button" id="logout" class="danger" hidden>
+      Dil nga llogaria
+    </button>
+  </header>
+
+  <section id="login" class="card">
+    <h2>Hyr në Admin</h2>
+    <form id="loginForm">
+      <label for="email">Email</label>
+      <input id="email" type="email" autocomplete="username"
+             placeholder="Email-i yt" required>
+
+      <label for="password">Fjalëkalimi</label>
+      <input id="password" type="password"
+             autocomplete="current-password"
+             placeholder="Fjalëkalimi" required>
+
+      <button type="submit">Hyr</button>
+      <button type="button" id="forgotBtn" class="secondary">
+        Harrova fjalëkalimin
+      </button>
+    </form>
+    <p id="loginMsg" class="message" role="status"></p>
+  </section>
+
+  <section id="reset" class="card" hidden>
+    <h2>Ndrysho fjalëkalimin</h2>
+    <form id="resetForm">
+      <label for="newPassword">Fjalëkalimi i ri</label>
+      <input id="newPassword" type="password"
+             autocomplete="new-password" minlength="6" required>
+
+      <label for="newPassword2">Përsërite fjalëkalimin</label>
+      <input id="newPassword2" type="password"
+             autocomplete="new-password" minlength="6" required>
+
+      <button type="submit">Ruaj fjalëkalimin</button>
+    </form>
+    <p id="resetMsg" class="message" role="status"></p>
+  </section>
+
+  <section id="panel" hidden>
+
+<!-- TRAFIKU I FAQES -->
+    <section class="card" id="trafficManager" style="padding:0;overflow:hidden">
+      <details>
+        <summary style="cursor:pointer;padding:18px;font-size:18px;font-weight:bold">📁 Statistikat e vizitorëve — burimi i trafikut</summary>
+        <div style="padding:0 18px 18px">
+      <p>Kontrollo burimin që dërgoi vizitorin, faqen e vizituar, pajisjen dhe kohën. Burimi shfaqet vetëm kur shfletuesi e dërgon; vizitat direkte mund të shfaqen si “Direkt / i panjohur”. Nuk ruajmë IP.</p>
+      <button type="button" id="refreshTraffic" class="secondary">Rifresko statistikat</button>
+      <div id="trafficStats" aria-live="polite">Statistikat do të shfaqen këtu.</div>
+      <h3>Burimet kryesore të trafikut</h3>
+      <div id="trafficSources">Burimet do të shfaqen këtu.</div>
+      <h3>Faqet më të vizituara</h3>
+      <div id="trafficPages">Faqet do të shfaqen këtu.</div>
+      <h3>Vizitat e fundit</h3>
+      <div id="trafficRecent">Vizitat do të shfaqen këtu.</div>
+            </div>
+      </details>
+    </section>
+
+
+    <!-- MIRATIMET: vendosur ne fillim te panelit -->
+    <section class="card" id="customerApprovalManager" style="padding:0;overflow:hidden">
+      <details>
+        <summary style="cursor:pointer;padding:18px;font-size:18px;font-weight:bold">📁 Miratimet e klientëve</summary>
+        <div style="padding:0 18px 18px">
+          <p>Klientët e rinj duhet të konfirmojnë email-in. Pastaj miratoji këtu që të mund të hyjnë në llogari.</p>
+          <button type="button" id="refreshApprovals" class="secondary">Rifresko kërkesat</button>
+          <div id="customerApprovals" aria-live="polite">Kërkesat do të shfaqen këtu.</div>
+        </div>
+      </details>
+    </section>
+
+
+    <!-- KATEGORITE -->
+    <section class="card" id="categoryManager" style="padding:0;overflow:hidden">
+      <details>
+        <summary style="cursor:pointer;padding:18px;font-size:18px;font-weight:bold">📁 Menaxhimi i kategorive</summary>
+        <div style="padding:0 18px 18px">
+          <p>Kategoritë ruhen në tabelën ekzistuese categories.</p>
+
+          <form id="categoryForm">
+            <label for="categoryName">Emri i kategorisë</label>
+            <input id="categoryName" type="text"
+                   placeholder="P.sh. Kamera IP" maxlength="100" required>
+
+            <label for="categorySort">Renditja</label>
+            <input id="categorySort" type="number"
+                   min="0" step="1" value="10" required>
+
+            <label for="categoryImage">Fotoja e kategorisë (opsionale)</label>
+            <input id="categoryImage" type="file" accept="image/*">
+            <div id="categoryImagePreview"></div>
+
+            <button type="submit">Shto kategorinë</button>
+          </form>
+
+          <p id="categoryMsg" class="message" role="status"></p>
+          <h3>Kategoritë ekzistuese</h3>
+          <div id="categoriesAdmin">Kategoritë do të shfaqen këtu.</div>
+        </div>
+      </details>
+    </section>
+
+
+
+    <!-- PRODUKTET -->
+    <section class="card">
+      <h2>Produktet</h2>
+      <button type="button" id="newBtn">+ Shto produkt</button>
+      <div id="productsAdmin">Produktet do të shfaqen këtu.</div>
+    </section>
+
+    <section id="productFormBox" class="card" hidden>
+      <h2 id="formTitle">Shto produkt</h2>
+      <form id="productForm">
+        <input type="hidden" id="productId">
+
+        <label for="productName">Emri i produktit</label>
+        <input id="productName" type="text" required>
+
+        <label for="productSku">Kodi SKU</label>
+        <input id="productSku" type="text">
+
+        <label for="productCategory">Kategoria</label>
+        <select id="productCategory" required>
+          <option value="">Po ngarkohen kategoritë...</option>
+        </select>
+
+        <label for="productPrice">Çmimi (€)</label>
+        <input id="productPrice" type="number"
+               min="0" step="0.01" required>
+
+        <label for="productSalePrice">Çmimi promocional (€)</label>
+        <input id="productSalePrice" type="number"
+               min="0" step="0.01">
+
+        <label for="productCondition">Gjendja e produktit</label>
+        <select id="productCondition" required>
+          <option value="new">I ri / E re</option>
+          <option value="used">I përdorur / E përdorur</option>
+        </select>
+
+        <label for="productStock">Stoku</label>
+        <input id="productStock" type="number"
+               min="0" step="1" value="0" required>
+
+        <label for="productDescription">Përshkrimi</label>
+        <textarea id="productDescription" rows="4"></textarea>
+
+        <label for="productVideoUrl">Video YouTube — udhëzime instalimi (opsionale)</label>
+        <input id="productVideoUrl" type="url"
+               placeholder="https://youtu.be/XXXXXXXXXXX">
+        <small style="display:block;margin:-10px 0 16px;color:#667085">
+          Ngjit linkun e videos së instalimit nga YouTube. Videoja shfaqet brenda detajeve të produktit.
+        </small>
+
+        <label>
+          <input type="checkbox" id="productFeatured">
+          Produkt i veçuar
+        </label>
+
+        <label>
+          <input type="checkbox" id="productActive" checked>
+          Produkt aktiv
+        </label>
+
+        <label for="productImage">Fotoja e produktit</label>
+        <input id="productImage" type="file" accept="image/*">
+        <div id="imagePreview"></div>
+
+        <p id="productMsg" class="message" role="status"></p>
+        <button type="submit">Ruaj produktin</button>
+        <button type="button" id="cancelProduct" class="secondary">
+          Anulo
+        </button>
+      </form>
+    </section>
+
+    <!-- POROSITE -->
+    <section class="card" id="ordersManager" style="padding:0;overflow:hidden">
+      <details>
+        <summary style="cursor:pointer;padding:18px;font-size:18px;font-weight:bold">📁 Porositë</summary>
+        <div style="padding:0 18px 18px">
+          <div id="orders">Porositë do të shfaqen këtu.</div>
+        </div>
+      </details>
+    </section>
+
+  </section>
+</main>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="./config.js?v=107"></script>
+<script src="./admin.js?v=20261016-approval-fix-1"></script>
+
+<script>
+  window.addEventListener("error", function(event) {
+    var message = document.getElementById("loginMsg");
+    if (message) {
+      message.textContent = "Gabim JavaScript: " + event.message;
+    }
+  });
+</script>
+</body>
+</html>
